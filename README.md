@@ -2,13 +2,23 @@
 
 ## Tecnologies
 
-Web application developed in ASP NET Core 3.1 with libraries:
+Web application developed in ASP NET Core 3.1, C# 8.0 with libraries:
 
 - AngleSharp
 - MemoryCache
 - StackExchange.Redis (Redis Cache)
 - HttpClient
 
-## Configuration
+## Heroku Deploy
 
-ToDo
+- Create a [Hekoru account](https://www.heroku.com/)
+- Create new app, like **web-scraping-paulera** =D
+- Configure ``Dockerfile`` (need to be in the same folder as .csproj WebApi and .sln file)
+- Navigate to Dockerfile folder and run:
+- Docker build image: ``docker build --rm -f "Dockerfile" -t "web-scraping-paulera:latest" .``
+- Login to Heroku (will open the browser): ``heroku login``
+- Sign into Container Registry: ``heroku container:login``
+- Push docker image: ``heroku container:push web -a web-scraping-paulera``
+- Release the newly pushed images to deploy your app: ``heroku container:release web -a web-scraping-paulera``
+- Its done! If you need check logs/errors/warnings, run: ``heroku logs --tail -a web-scraping-paulera``
+- My deployed app is: https://web-scraping-paulera.herokuapp.com/
