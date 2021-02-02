@@ -5,10 +5,10 @@ Data is retrieved using pure web scraping techniques, without Github's API or we
 
 ## Play
 
-``GET`` https://web-scraping-paulera.herokuapp.com/api/WebScraping?url=https://github.com/paulojsilva/web-scraping-nolayer&api_key=
+``GET`` https://web-scraping-paulera.herokuapp.com/api/WebScraping?url=&api_key=
 
-- ``url``: Public GitHub repository
-- ``api_key``: If AuthenticationSettings.Enabled: true, set the security key
+- ``url``: Public GitHub repository, e.g. `https://github.com/paulojsilva/web-scraping-nolayer`
+- ``api_key``: If Authentication enabled, set the security key
 
 ## Tecnologies
 
@@ -27,7 +27,8 @@ Web application developed in ASP NET Core 3.1, C# 8.0 with:
 
 - Create a [Hekoru account](https://www.heroku.com/)
 - Create new app, like **web-scraping-paulera** =D
-- Configure ``Dockerfile`` (need to be in the same folder as .csproj WebApi and .sln file)
+- Download and install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line)
+- Configure ``Dockerfile`` (need to be in the same folder as .csproj WebApi and .sln files)
 - Navigate to Dockerfile folder and run:
 - Docker build image: ``docker build --rm -f "Dockerfile" -t "web-scraping-paulera:latest" .``
 - Login to Heroku (will open the browser): ``heroku login``
