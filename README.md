@@ -1,13 +1,27 @@
 # Web Scraping
 
+Deliver an API that returns the total number of lines and the total number of bytes of all the files of a given public Github repository, grouped by file extension.
+Data is retrieved using pure web scraping techniques, without Github's API or web scraping libraries.
+
+## Play
+
+``GET`` https://web-scraping-paulera.herokuapp.com/api/WebScraping?url=https://github.com/paulojsilva/web-scraping-nolayer&api_key=
+
+- ``url``: Public GitHub repository
+- ``api_key``: If AuthenticationSettings.Enabled: true, set the security key
+
 ## Tecnologies
 
-Web application developed in ASP NET Core 3.1, C# 8.0 with libraries:
+Web application developed in ASP NET Core 3.1, C# 8.0 with:
 
-- AngleSharp
+- HttpClient (native)
+- AngleSharp (HTML parser)
 - MemoryCache
 - StackExchange.Redis (Redis Cache)
-- HttpClient
+- Semaphore process synchronization
+- ParallelForEach
+- Unit tests with Xunit and FluentAssertions
+- Docker
 
 ## Heroku Deploy
 
