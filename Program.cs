@@ -17,10 +17,6 @@ namespace WebScraping
                 {
                     var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-                    Console.WriteLine();
-                    Console.WriteLine("ASPNETCORE_ENVIRONMENT: " + env);
-                    Console.WriteLine();
-
                     if (env == "DYNO")
                     {
                         var port = Environment.GetEnvironmentVariable("PORT");
