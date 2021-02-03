@@ -29,7 +29,8 @@ Web application developed in ASP NET Core 3.1, C# 8.0 with:
 
 Project was modeled with DDD (Domain Driven Design) to guide the construction based on Domain.
 The Domain has knowledge to how find informations with WebScraping on GitHub, deal with HTTP Requests, parallelism, etc.
-Layers:
+
+**Layers**:
 
 - **Api**: Expose on Web one API that has an URL request to aplicate WebScraping. It relates to the Application and delegates to it the responsibility of performing WebScraping operation.
 - **Application**: Control Layer responsible to receive WebScraping requests and delegate to superior layer - Domain. The Application does not have knowledge on how to apply WebScraping.
@@ -95,7 +96,8 @@ To get around this, we use Semaphore, which limits the number of tasks that use 
 
 O projeto foi modelado com DDD (Domain Driven Design) para guiar a construção do projeto baseado no Domínio.
 O domínio possui o conhecimento de como buscar as informações via Web Scraping no GitHub, lidar com requisições HTTP, paralelismo, etc.
-Divisão das camadas:
+
+**Divisão das camadas**:
 
 - **Api**: Expõe na Web uma API que tem como entrada a URL a ser aplicada WebScraping. Se relaciona com a Application e delega a ela responsabilidade de executar a operação de WebScraping.
 - **Application**: Camada controlodora responsável por receber pedidos de webscraping e delegar à camada superior - Domain. A Application não tem conhecimento de como aplicar WebScraping.
