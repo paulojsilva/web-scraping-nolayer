@@ -60,7 +60,7 @@ With that question answered, we were able to determine whether:
 As the archive content pages are found, the files found (name, lines and byte size) are stored in the `ConcurrentBag temporaryFiles`.
 Doing this process recursively and 1-by-1 is very slow. Then, we use ParallelForEach to give a UP on the recursion.
 
-However, GitHub controls access to its resources with **Rate Limiting**, so if we consume many pages in a short time, GitHub blocks access with `429 Too Many Requests`.
+However, GitHub controls access to its resources with **Rate Limiting**, so if we consume many pages in a short time, GitHub blocks access with **429 Too Many Requests**.
 To get around this, we use Semaphore, which limits the number of tasks that use a certain resource (in our case, it limits the number of tasks that access HttpClient).
 
 ## Heroku Deploy
@@ -89,7 +89,7 @@ To get around this, we use Semaphore, which limits the number of tasks that use 
 - My Docker Hub: https://hub.docker.com/r/paulojustinosilvadocker/web-scraping
 
 
-# Web Scraping - Em português =D
+# Web Scraping - in Portuguese =D
 
 ## Projeto
 
@@ -126,5 +126,5 @@ Com essa pergunta respondida, conseguimos determinar se:
 A medida que as páginas de conteúdo de arquivo são encontradas, armazena-se em `ConcurrentBag temporaryFiles` os arquivos encontrados (nome, linhas e tamanho em byte).
 Fazer esse processo recursivamente e 1 a 1 é lento com força. Então, utilizamos ParallelForEach para dar um UP na recursividade.
 
-Todavia, o GitHub controla o acesso de seus recursos com **Rate Limiting**, então se consumirmos muitas páginas em pouco tempo, o GitHub bloqueia o acesso com 429 Too Many Requests.
+Todavia, o GitHub controla o acesso de seus recursos com **Rate Limiting**, então se consumirmos muitas páginas em pouco tempo, o GitHub bloqueia o acesso com **429 Too Many Requests**.
 Para contornar isso, usamos Semaphore, que limita a quantidade de tasks que utilizam um determinado recurso (no nosso caso, limita a quantidade de tasks que acessam o HttpClient).
