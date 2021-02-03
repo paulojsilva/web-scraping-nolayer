@@ -27,7 +27,7 @@ Web application developed in ASP NET Core 3.1, C# 8.0 with:
 
 ## Project
 
-Project was model with DDD (Domain Driven Design) to guide the construction based on Domain.
+Project was modeled with DDD (Domain Driven Design) to guide the construction based on Domain.
 The Domain has knowledge to how find informations with WebScraping on GitHub, deal with HTTP Requests, parallelism, etc.
 Layers:
 
