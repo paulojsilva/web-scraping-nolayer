@@ -11,6 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<AppSettings>(configuration.GetSection(nameof(AppSettings)));
+            services.Configure<ParallelismSettings>(configuration.GetSection(nameof(ParallelismSettings)));
             services.Configure<CacheSettings>(configuration.GetSection(nameof(CacheSettings)));
             services.Configure<AuthenticationSettings>(configuration.GetSection(nameof(AuthenticationSettings)));
         }

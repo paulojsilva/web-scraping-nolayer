@@ -15,8 +15,21 @@ namespace WebScraping
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    var port = Environment.GetEnvironmentVariable("PORT");
-                    webBuilder.UseStartup<Startup>().UseUrls("http://*:" + port);
+                    var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                    Console.WriteLine();
+                    Console.WriteLine("ASPNETCORE_ENVIRONMENT: " + env);
+                    Console.WriteLine();
+
+                    if (env == "DYNO")
+                    {
+                        var port = Environment.GetEnvironmentVariable("PORT");
+                        webBuilder.UseStartup<Startup>().UseUrls("http://*:" + port);
+                    }
+                    else
+                    {
+                        webBuilder.UseStartup<Startup>();
+                    }
                 });
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Domain.Services.Implementations
@@ -16,10 +17,12 @@ namespace Domain.Services.Implementations
     public class GitHubScraperService : ScraperService, IScraper
     {
         protected ConcurrentBag<ItemFileInformationResponse> temporaryFiles = new ConcurrentBag<ItemFileInformationResponse>();
+        protected SemaphoreSlim semaphore;
+        protected int totalHttpRequests = 0;
         protected string lastCommitHash;
         protected bool usedCache;
 
-        public GitHubScraperService(IHttpClientFactory httpClientFactory, ICache cache, IOptions<AppSettings> settings) : base(httpClientFactory, cache, settings)
+        public GitHubScraperService(IHttpClientFactory httpClientFactory, ICache cache, IOptions<ParallelismSettings> settings) : base(httpClientFactory, cache, settings)
         {
         }
 
@@ -35,6 +38,8 @@ namespace Domain.Services.Implementations
                 this.httpClient = CreateHttpClient();
 
                 this.host = request.Host;
+
+                this.semaphore = new SemaphoreSlim(this.settings.Value.MaxHttpRequestInParallel);
 
                 await this.ProcessAsync(request.Url, true);
 
@@ -65,18 +70,18 @@ namespace Domain.Services.Implementations
 
             try
             {
-                using (var httpResponse = await httpClient.GetAsync(url))
+                using (var response = await this.GetDataAsync(url))
                 {
-                    if (this.InvalidHttpResponse(httpResponse)) return;
+                    if (Invalid) return;
 
-                    using (var stream = await httpResponse.Content.ReadAsStreamAsync())
+                    using (var stream = await response.Content.ReadAsStreamAsync())
                     {
                         using (var document = documentParser.ParseDocument(stream))
                         {
                             var parser = new GitHubParser(document, url);
 
                             await this.DeterminePageContentAsync(parser, root);
-                            
+
                             document.Close();
                         }
 
@@ -88,6 +93,37 @@ namespace Domain.Services.Implementations
             {
                 AddNotification(ex.GetType().Name, ex.GetMessageConcatenatedWithInner());
             }
+        }
+
+        /// <summary>
+        /// Get GitHub data (HTML full content) using Semaphore process synchronization
+        /// </summary>
+        /// <param name="url">GitHub URL</param>
+        /// <returns>HttpResponseMessage</returns>
+        protected virtual async Task<HttpResponseMessage> GetDataAsync(string url)
+        {
+            try
+            {
+                await this.semaphore.WaitAsync();
+                await this.GoSlowly();
+
+                var response = await httpClient.GetAsync(url);
+                this.ValidHttpResponse(response);
+                return response;
+            }
+            finally
+            {
+                this.semaphore.Release();
+            }
+        }
+
+        /// <summary>
+        /// As the number of requests to GitHub increases, the system needs delay the amount to avoid 429 To Many Requests.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual async Task GoSlowly()
+        {
+            await Task.Delay(Interlocked.Increment(ref totalHttpRequests) * this.settings.Value.IncreaseDelayGoSlowly);
         }
 
         /// <summary>
@@ -148,11 +184,11 @@ namespace Domain.Services.Implementations
             {
                 await this.ProcessAsync(host + element.Endpoint);
 
-            }, maxDegreeOfParallelism: GetRandomMaxDegreeOfParallelism());
+            }, maxDegreeOfParallelism: this.settings.Value.MaxDegreeOfParallelism);
         }
 
         /// <summary>
-        /// Dealing with temporaryFiles and grouping by extensions
+        /// Dealing with temporaryFiles and grouping by extension
         /// </summary>
         /// <returns></returns>
         protected List<GroupingFileInformationResponse> GroupByExtension()
@@ -193,7 +229,7 @@ namespace Domain.Services.Implementations
         /// </summary>
         /// <param name="httpResponse"></param>
         /// <returns></returns>
-        protected bool InvalidHttpResponse(HttpResponseMessage httpResponse)
+        protected bool ValidHttpResponse(HttpResponseMessage httpResponse)
         {
             if (httpResponse == default)
             {
@@ -204,18 +240,7 @@ namespace Domain.Services.Implementations
                 AddNotification(nameof(HttpResponseMessage), $"{(int)httpResponse.StatusCode} {httpResponse.StatusCode}");
             }
 
-            return Invalid;
-        }
-
-        /// <summary>
-        /// If MaxDegreeOfParallelism param is 2 and PercentualToUseParallelism is 0.4, it means that 40% of processing uses 2 parallel tasks
-        /// </summary>
-        /// <returns>1 (no parallel) or MaxDegreeOfParallelism param (run in parallel)</returns>
-        protected int GetRandomMaxDegreeOfParallelism()
-        {
-            var random = new Random().NextDouble();
-
-            return (random <= this.settings.Value.PercentualToUseParallelism) ? this.settings.Value.MaxDegreeOfParallelism : 1;
+            return Valid;
         }
     }
 }

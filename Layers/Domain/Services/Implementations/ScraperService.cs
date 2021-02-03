@@ -15,12 +15,12 @@ namespace Domain.Services.Implementations
     {
         protected readonly IHttpClientFactory httpClientFactory;
         protected readonly ICache cache;
-        protected readonly IOptions<AppSettings> settings;
+        protected readonly IOptions<ParallelismSettings> settings;
         protected HttpClient httpClient;
         protected string host;
         protected HtmlParser documentParser = new HtmlParser();
 
-        public ScraperService(IHttpClientFactory httpClientFactory, ICache cache, IOptions<AppSettings> settings)
+        public ScraperService(IHttpClientFactory httpClientFactory, ICache cache, IOptions<ParallelismSettings> settings)
         {
             this.httpClientFactory = httpClientFactory;
             this.cache = cache;

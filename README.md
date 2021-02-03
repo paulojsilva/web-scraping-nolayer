@@ -20,7 +20,7 @@ Web application developed in ASP NET Core 3.1, C# 8.0 with:
 - StackExchange.Redis (Redis Cache)
 - Semaphore process synchronization
 - ParallelForEach
-- Unit tests with Xunit and FluentAssertions
+- Unit tests with XUnit and FluentAssertions
 - Docker
 
 ## Heroku Deploy
@@ -37,3 +37,13 @@ Web application developed in ASP NET Core 3.1, C# 8.0 with:
 - Release the newly pushed images to deploy your app: ``heroku container:release web -a web-scraping-paulera``
 - Its done! If you need check logs/errors/warnings, run: ``heroku logs --tail -a web-scraping-paulera``
 - My deployed app is: https://web-scraping-paulera.herokuapp.com/
+
+## Docker Hub
+
+- Create a [Docker ID (account)](https://hub.docker.com/)
+- Create a repository
+- Navigate to Dockerfile folder and run:
+- build image: ``docker build --rm -f "Dockerfile" -t "YourDockerIdHere/YourDockerRepositoryHere:latest" .``
+- login (enter your ID and password): ``docker login``
+- push: ``docker push YourDockerIdHere/YourDockerRepositoryHere:latest``
+- My Docker Hub: https://hub.docker.com/r/paulojustinosilvadocker/web-scraping
